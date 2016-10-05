@@ -180,7 +180,7 @@ class Rex():
         p = subprocess.Popen(cmd)
         while p.poll() == None:
             time.sleep(.1)
-        print "ret_code", p.returncode
+        print ("ret_code", p.returncode)
 
         return True
 
