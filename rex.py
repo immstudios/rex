@@ -5,14 +5,10 @@ import time
 import json
 import traceback
 
-__all__ = [] # do not import anything
+# do not import anything
+__all__ = [] 
 
-DEBUG     = 0
-INFO      = 1
-WARNING   = 2
-ERROR     = 3
-GOOD_NEWS = 4
-
+DEBUG, INFO, WARNING, ERROR, GOOD_NEWS = range(5)
 PLATFORM = "windows" if sys.platform == "win32" else "unix"
 
 def indent(src, l=4):
