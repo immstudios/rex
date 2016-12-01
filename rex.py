@@ -6,7 +6,7 @@ import json
 import traceback
 
 # do not import anything
-__all__ = [] 
+__all__ = []
 
 DEBUG, INFO, WARNING, ERROR, GOOD_NEWS = range(5)
 PLATFORM = "windows" if sys.platform == "win32" else "unix"
@@ -104,7 +104,7 @@ class Repository():
 
 
 
-class Rex():
+class Rex(object):
     def __init__(self):
         self.app_dir = os.path.dirname(sys.argv[0])
         self.vendor_dir = os.path.join(self.app_dir, "vendor")
@@ -130,8 +130,9 @@ class Rex():
                     repo_settings = self.manifest[repo_url]
                     repo = Repository(self, repo_url, **repo_settings)
                     self._repos.append(repo)
-            except:
+            except Exception:
                 log_traceback()
+                critical_error("Unable to load rex manifest. Exiting")
                 self._repos = []
         return self._repos
 
@@ -155,7 +156,7 @@ class Rex():
         for repo in self.repos:
             try:
                 self.update(repo) and self.post_install(repo)
-            except:
+            except Exception:
                 log_traceback()
         os.chdir(self.app_dir)
 
