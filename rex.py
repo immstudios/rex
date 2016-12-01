@@ -106,8 +106,8 @@ class Repository():
 
 class Rex(object):
     def __init__(self):
-        self.app_dir = os.path.dirname(sys.argv[0])
-        self.vendor_dir = os.path.join(self.app_dir, "vendor")
+        self.app_dir = os.path.abspath(os.path.dirname(sys.argv[0]))
+        self.vendor_dir =os.path.join(self.app_dir, "vendor")
         self.manifest_path = os.path.join(self.app_dir, "rex.json")
         self.self_update()
         self.main()
@@ -115,6 +115,9 @@ class Rex(object):
     @property
     def force_update(self):
         return "--rex-update" in sys.argv
+
+    def chdir(self, path):
+        os.chdir(path)
 
     @property
     def repos(self):
@@ -158,7 +161,7 @@ class Rex(object):
                 self.update(repo) and self.post_install(repo)
             except Exception:
                 log_traceback()
-        os.chdir(self.app_dir)
+        self.chdir(self.app_dir)
 
     def update(self, repo):
         if not os.path.exists(self.vendor_dir):
@@ -166,12 +169,12 @@ class Rex(object):
 
         if os.path.exists(repo.path):
             if self.force_update:
-                os.chdir(repo.path)
+                self.chdir(repo.path)
                 cmd = ["git", "pull"]
             else:
                 return True
         else:
-            os.chdir(self.vendor_dir)
+            self.chdir(self.vendor_dir)
             cmd = ["git", "clone", repo.url]
 
         p = subprocess.Popen(cmd)
