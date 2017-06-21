@@ -6,9 +6,9 @@ import json
 import traceback
 
 try:
-    from urllib.request import urlopen
-except ImportError:
     from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
 
 # do not import anything
 __all__ = []
@@ -150,9 +150,9 @@ class Rex(object):
     def self_update(self):
         if not self.force_update:
             return
-        #if not os.path.exists(".rex_devel"):
-        #    logging.debug("This is a development machine. Skipping rex auto update.")
-        #    return
+        if os.path.exists(".rex_devel"):
+            logging.debug("This is a development machine. Skipping rex auto update.")
+            return
         response = urlopen("https://imm.cz/rex.py")
         new_rex = response.read()
         old_rex = open("rex.py").read()
