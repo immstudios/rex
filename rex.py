@@ -169,7 +169,6 @@ class Rex(object):
         old_rex = open("rex.py").read()
         if new_rex != old_rex:
             logging.info("Updating REX core")
-            sys.exit(0)
             with open("rex.py", "w") as f:
                 f.write(new_rex)
         else:
