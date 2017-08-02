@@ -1,9 +1,13 @@
+__all__ = ["require"]
+
 import os
 import sys
 import subprocess
 import time
 import json
 import traceback
+
+###
 
 version_info = sys.version_info[:2]
 PYTHON_VERSION = version_info[0] + float("." + str(version_info[1])) # TODO: make this nice
@@ -20,9 +24,6 @@ else:
     decode_if_py3 = lambda x: x
     encode_if_py3 = lambda x: x
     string_type = unicode
-
-# do not import anything
-__all__ = []
 
 DEBUG, INFO, WARNING, ERROR, GOOD_NEWS = range(5)
 PLATFORM = "windows" if sys.platform == "win32" else "unix"
@@ -103,7 +104,7 @@ def critical_error(msg, **kwargs):
 
 
 
-class Repository():
+class Repository(object):
     def __init__(self, parent,  url, **kwargs):
         self.parent = parent
         self.url = url
@@ -211,7 +212,12 @@ class Rex(object):
         return True
 
     def post_install(self, repo):
-        if repo.get("python-path") and not repo.path in sys.path:
+        if (repo.get("python-path") or repo.get("python_path")) and not repo.path in sys.path:
             sys.path.insert(0, repo.path)
 
 rex = Rex()
+
+def require(url, **kwargs):
+    repo = Repository(rex, url, **kwargs)
+    return rex.update(repo) and rex.post_install(repo)
+
